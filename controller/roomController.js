@@ -8,14 +8,24 @@ async function saveData(roomId, topic, difficulty, question) {
   const RoomData = new Room({
     room: roomId,
     questions: results,
-    isValid: true,
+    isValid: false,
   });
 
   await RoomData.save();
 }
 
 const getQuestions = async (id) => {
-  const results = Room.findOne({ id: id });
+  //   Room.find({ room: id }, (error, data) => {
+  //     if (error) {
+  //       console.log(error);
+  //     } else {
+  //       console.log(data);
+  //     }
+  //   });
+  const data = await Room.findOne({ room: id });
+  console.log(data);
 };
 
-module.exports = { saveData };
+//saveData(1, 9, "easy", 10);
+// getQuestions();
+module.exports = { saveData, getQuestions };

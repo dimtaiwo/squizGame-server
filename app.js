@@ -4,9 +4,11 @@ const app = express();
 const http = require("http");
 const server = http.createServer(app);
 const { fetchData } = require("./fetchdata");
-const { saveData } = require("./controller/roomController");
+const { saveData, getQuestions } = require("./controller/roomController");
 
 const { instrument } = require("@socket.io/admin-ui");
+
+//getQuestions("P_c18qtDjR2q1WdAAAAr");
 
 const db = require("./db");
 
@@ -34,7 +36,12 @@ io.on("connection", (socket) => {
     console.log(details);
     const gameId = socket.id;
 
-    await saveData(gameId, details.topic, details.difficulty, details.questions);
+    await saveData(
+      gameId,
+      details.topic,
+      details.difficulty,
+      details.questions
+    );
 
     socket.emit("created", gameId);
   });
