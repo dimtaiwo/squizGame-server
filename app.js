@@ -4,6 +4,11 @@ const app = express();
 const http = require("http");
 const server = http.createServer(app);
 const { fetchData } = require("./fetchdata");
+const { saveData } = require("./controller/roomController");
+
+const db = require("./db");
+
+db();
 const io = socketIo(server, {
   cors: {
     origin: "*",
@@ -27,6 +32,8 @@ io.on("connection", (socket) => {
   socket.on("create", (details) => {
     console.log(details);
     console.log(socket.id);
+
+    saveData(socket.id, details.topic, details.difficulty, details.questions);
 
     // GENERATE PIN
 
