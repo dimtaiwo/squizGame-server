@@ -14,17 +14,28 @@ const io = socketIo(server, {
 const PORT = process.env.PORT || 4000;
 
 io.on("connection", (socket) => {
+  const fakeData = Math.floor(Math.random() * 100);
   console.log("a user connected");
 
-  socket.on("data", async (details) => {
-    console.log(details.difficulty);
-    const trivia = await fetchData(
-      details.topic,
-      details.difficulty.toLowerCase(),
-      details.questions
-    );
-    console.log(trivia);
-    socket.emit("trivia", trivia);
+  socket.on("join", (id) => {
+    socket.join(id);
+    console.log("User has joined room: " + id);
+
+    socket.emit("joined");
+  });
+
+  socket.on("create", (details) => {
+    console.log(details);
+    console.log(socket.id);
+
+    // GENERATE PIN
+
+    socket.emit("created", socket.id);
+  });
+
+  socket.on("getData", () => {
+    // API CALL
+    socket.emit("receiveData", fakeData);
   });
 
   socket.on("disconnect", () => {
