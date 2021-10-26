@@ -14,4 +14,8 @@ async function saveData(roomId, topic, difficulty, question) {
   await RoomData.save();
 }
 
+const getQuestions = async (id) => {
+  const results = Room.findOne({ id: id });
+};
+
 module.exports = { saveData };

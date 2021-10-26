@@ -6,6 +6,8 @@ const server = http.createServer(app);
 const { fetchData } = require("./fetchdata");
 const { saveData } = require("./controller/roomController");
 
+const { instrument } = require("@socket.io/admin-ui");
+
 const db = require("./db");
 
 db();
@@ -19,25 +21,22 @@ const io = socketIo(server, {
 const PORT = process.env.PORT || 4000;
 
 io.on("connection", (socket) => {
-  const fakeData = Math.floor(Math.random() * 100);
   console.log("a user connected");
 
   socket.on("join", (id) => {
     socket.join(id);
     console.log("User has joined room: " + id);
 
-    socket.emit("joined");
+    socket.emit("joined", socket.id);
   });
 
-  socket.on("create", (details) => {
+  socket.on("create", async (details) => {
     console.log(details);
-    console.log(socket.id);
+    const gameId = socket.id;
 
-    saveData(socket.id, details.topic, details.difficulty, details.questions);
+    await saveData(gameId, details.topic, details.difficulty, details.questions);
 
-    // GENERATE PIN
-
-    socket.emit("created", socket.id);
+    socket.emit("created", gameId);
   });
 
   socket.on("getData", () => {
@@ -49,6 +48,8 @@ io.on("connection", (socket) => {
     io.emit("message", "A user has left the game");
   });
 });
+
+instrument(io, { auth: false });
 
 server.listen(PORT, () => {
   console.log(`listening on ${PORT}`);
