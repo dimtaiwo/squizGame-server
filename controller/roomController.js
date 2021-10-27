@@ -22,6 +22,7 @@ const getQuestions = async (id) => {
   //       console.log(data);
   //     }
   //   });
+  console.log("Getting questions... for id: " + id);
   const data = await Room.findOne({ room: id });
   return data;
 };

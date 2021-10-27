@@ -54,11 +54,21 @@ io.on("connection", (socket) => {
     console.log("THE ID IS: " + id)
     // API CALL
     const gameQuestions = await getQuestions(id);
-    // console.log(gameQuestions);
+    console.log(gameQuestions);
     socket.emit("receiveData", gameQuestions);
     socket.to(id).emit("sendQuestions", gameQuestions);
   });
 
+  socket.on("result", (data) => {
+    // SAVE THE RESULT TO DB
+    console.log(`${data.username} has scored ${data.points} points`);
+
+    // FETCH ALL SCORES FOR THIS LOBBY
+    const d = [{ username: 'Dim', points: 16 }, { username: 'Velin', points: 20 }];
+    // GIVE BACK ALL THE SCORES
+
+    io.to(data.room).emit("updatedResults", d);
+  });
 
   socket.on("disconnect", () => {
     io.emit("message", "A user has left the game");
