@@ -27,6 +27,9 @@ const getQuestions = async (id) => {
   return data;
 };
 
-//saveData(1, 9, "easy", 10);
-// getQuestions();
-module.exports = { saveData, getQuestions };
+const getPlayer = async (id) => {
+  const data = await Room.findOne({ room: id });
+  return data.players;
+};
+
+module.exports = { saveData, getQuestions, getPlayer };

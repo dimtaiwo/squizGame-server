@@ -4,7 +4,11 @@ const app = express();
 const http = require("http");
 const server = http.createServer(app);
 const { fetchData } = require("./fetchdata");
-const { saveData, getQuestions } = require("./controller/roomController");
+const {
+  saveData,
+  getQuestions,
+  getPlayer,
+} = require("./controller/roomController");
 const { saveScore, getScore } = require("./controller/scoreController");
 
 const { instrument } = require("@socket.io/admin-ui");
@@ -34,12 +38,12 @@ io.on("connection", (socket) => {
   console.log("a user connected to " + socket.id);
 
   socket.on("join", async (id) => {
-
-    console.log("MAX PLAYERS ALLOWED: " + globalMaxPlayers[id]);
+    //console.log("MAX PLAYERS ALLOWED: " + globalMaxPlayers[id]);
+    const numberOfPlayers = await getPlayer(id);
 
     if (!globalRooms[id]) {
       globalRooms[id] = 1;
-    } else if (globalRooms[id] < globalMaxPlayers[id]) {
+    } else if (globalRooms[id] < numberOfPlayers) {
       globalRooms[id] += 1;
     } else {
       console.log("The room is full!");
