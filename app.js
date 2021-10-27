@@ -63,7 +63,7 @@ io.on("connection", (socket) => {
   socket.on("result", async (data) => {
     // SAVE THE RESULT TO DB
     //console.log(`${data.username} has scored ${data.points} points`);
-    saveScore(data.points, data.username, data.room);
+    await saveScore(data.points, data.username, data.room);
 
     // FETCH ALL SCORES FOR THIS LOBBY
     const roomScores = await getScore(data.room);
