@@ -51,14 +51,13 @@ io.on("connection", (socket) => {
   });
 
   socket.on("getData", async (id) => {
-    console.log("THE ID IS: " + id)
+    console.log("THE ID IS: " + id);
     // API CALL
     const gameQuestions = await getQuestions(id);
-    // console.log(gameQuestions);
+    console.log(gameQuestions);
     socket.emit("receiveData", gameQuestions);
     socket.to(id).emit("sendQuestions", gameQuestions);
   });
-
 
   socket.on("disconnect", () => {
     io.emit("message", "A user has left the game");
