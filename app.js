@@ -23,15 +23,37 @@ const io = socketIo(server, {
 
 const PORT = process.env.PORT || 4000;
 
+const globalRooms = {};
+const globalMaxPlayers = {};
+
+const setMax = async (id, max) => {
+  globalMaxPlayers[id] = max;
+};
+
 io.on("connection", (socket) => {
   console.log("a user connected to " + socket.id);
 
   socket.on("join", async (id) => {
+
+    console.log("MAX PLAYERS ALLOWED: " + globalMaxPlayers[id]);
+
+    if (!globalRooms[id]) {
+      globalRooms[id] = 1;
+    } else if (globalRooms[id] < globalMaxPlayers[id]) {
+      globalRooms[id] += 1;
+    } else {
+      console.log("The room is full!");
+      socket.emit("roomFull", globalRooms[id]);
+      return;
+    }
+
+    // console.log("The room has: " + globalRooms[id] + "players");
+
     socket.join(id);
     console.log("User has JOINED room: " + id);
 
     const gameQuestions = await getQuestions(id);
-    console.log(gameQuestions);
+    // console.log(gameQuestions);
 
     socket.emit("joined", id, gameQuestions);
   });
@@ -48,6 +70,10 @@ io.on("connection", (socket) => {
       details.questions
     );
 
+    // globalMaxPlayers[socket.id] = details.players;
+    // console.log(details.players);
+    await setMax(socket.id, details.players);
+
     socket.emit("created", socket.id);
   });
 
@@ -55,7 +81,7 @@ io.on("connection", (socket) => {
     console.log("THE ID IS: " + id);
     // API CALL
     const gameQuestions = await getQuestions(id);
-    console.log(gameQuestions);
+    // console.log(gameQuestions);
     socket.emit("receiveData", gameQuestions);
     socket.to(id).emit("sendQuestions", gameQuestions);
   });
