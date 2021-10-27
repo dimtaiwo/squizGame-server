@@ -1,7 +1,7 @@
 const Score = require("../models/scoreModel");
 
 async function saveScore(points, username, roomId) {
-  const newScore = new Score({
+  const newScore = await new Score({
     points: points,
     username: username,
     room: roomId,
@@ -11,7 +11,7 @@ async function saveScore(points, username, roomId) {
 }
 
 async function getScore(room) {
-  const scores = Score.find({ room: room });
+  const scores = await Score.find({ room: room });
   return scores;
 }
 
