@@ -45,7 +45,8 @@ io.on("connection", (socket) => {
       socket.id,
       details.topic,
       details.difficulty,
-      details.questions
+      details.questions,
+      details.players
     );
 
     socket.emit("created", socket.id);
