@@ -8,7 +8,7 @@ const { saveData, getQuestions } = require("./controller/roomController");
 
 const { instrument } = require("@socket.io/admin-ui");
 
-//getQuestions("P_c18qtDjR2q1WdAAAAr");
+// getQuestions("P_c18qtDjR2q1WdAAAAr");
 
 const db = require("./db");
 
@@ -23,33 +23,42 @@ const io = socketIo(server, {
 const PORT = process.env.PORT || 4000;
 
 io.on("connection", (socket) => {
-  console.log("a user connected");
+  console.log("a user connected to " + socket.id);
 
-  socket.on("join", (id) => {
+  socket.on("join", async (id) => {
     socket.join(id);
-    console.log("User has joined room: " + id);
+    console.log("User has JOINED room: " + id);
 
-    socket.emit("joined", socket.id);
+    const gameQuestions = await getQuestions(id);
+    console.log(gameQuestions);
+
+    socket.emit("joined", id, gameQuestions);
   });
 
   socket.on("create", async (details) => {
     console.log(details);
-    const gameId = socket.id;
+    // const gameId = socket.id;
+    // console.log(gameId);
 
     await saveData(
-      gameId,
+      socket.id,
       details.topic,
       details.difficulty,
       details.questions
     );
 
-    socket.emit("created", gameId);
+    socket.emit("created", socket.id);
   });
 
-  socket.on("getData", () => {
+  socket.on("getData", async (id) => {
+    console.log("THE ID IS: " + id)
     // API CALL
-    socket.emit("receiveData", fakeData);
+    const gameQuestions = await getQuestions(id);
+    // console.log(gameQuestions);
+    socket.emit("receiveData", gameQuestions);
+    socket.to(id).emit("sendQuestions", gameQuestions);
   });
+
 
   socket.on("disconnect", () => {
     io.emit("message", "A user has left the game");

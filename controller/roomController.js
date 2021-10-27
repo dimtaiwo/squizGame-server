@@ -3,7 +3,7 @@ const { fetchData } = require("../fetchData");
 
 async function saveData(roomId, topic, difficulty, question) {
   const results = await fetchData(topic, difficulty.toLowerCase(), question);
-  console.log(results);
+
 
   const RoomData = new Room({
     room: roomId,
@@ -23,7 +23,7 @@ const getQuestions = async (id) => {
   //     }
   //   });
   const data = await Room.findOne({ room: id });
-  console.log(data);
+  return data;
 };
 
 //saveData(1, 9, "easy", 10);
