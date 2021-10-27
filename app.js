@@ -5,6 +5,7 @@ const http = require("http");
 const server = http.createServer(app);
 const { fetchData } = require("./fetchdata");
 const { saveData, getQuestions } = require("./controller/roomController");
+const { saveScore, getScore } = require("./controller/scoreController");
 
 const { instrument } = require("@socket.io/admin-ui");
 
@@ -57,6 +58,18 @@ io.on("connection", (socket) => {
     console.log(gameQuestions);
     socket.emit("receiveData", gameQuestions);
     socket.to(id).emit("sendQuestions", gameQuestions);
+  });
+
+  socket.on("result", async (data) => {
+    // SAVE THE RESULT TO DB
+    //console.log(`${data.username} has scored ${data.points} points`);
+    saveScore(data.points, data.username, data.room);
+
+    // FETCH ALL SCORES FOR THIS LOBBY
+    const roomScores = await getScore(data.room);
+    // GIVE BACK ALL THE SCORES
+
+    io.to(data.room).emit("updatedResults", roomScores);
   });
 
   socket.on("disconnect", () => {
