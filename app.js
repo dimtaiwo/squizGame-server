@@ -17,7 +17,7 @@ const { instrument } = require("@socket.io/admin-ui");
 const db = require("./db");
 
 app.get("/", (req, res) => {
-  console.log("hello world !");
+  res.send("hello world !");
 });
 
 db();
