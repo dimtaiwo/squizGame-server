@@ -3,10 +3,14 @@ const socketIo = require("socket.io");
 const app = express();
 const http = require("http");
 const server = http.createServer(app);
+const scoreApiController = require("./controller/scoreApiController");
 const {
   saveData,
   getQuestions,
   getPlayer,
+  getDifficulty,
+  getRoom,
+  getTopic,
 } = require("./controller/roomController");
 const { saveScore, getScore } = require("./controller/scoreController");
 
@@ -17,6 +21,8 @@ const db = require("./db");
 app.get("/", (req, res) => {
   res.send("hello world !");
 });
+
+app.use("/", scoreApiController);
 
 db();
 const io = socketIo(server, {
@@ -60,8 +66,6 @@ io.on("connection", (socket) => {
   });
 
   socket.on("create", async (details) => {
-    console.log(details);
-
     await saveData(
       socket.id,
       details.topic,
@@ -69,6 +73,8 @@ io.on("connection", (socket) => {
       details.questions,
       details.players
     );
+
+    await getRoom();
 
     await setMax(socket.id, details.players);
 
@@ -86,7 +92,10 @@ io.on("connection", (socket) => {
 
   socket.on("result", async (data) => {
     // SAVE THE RESULT TO DB
-    await saveScore(data.points, data.username, data.room);
+    const difficulty = await getDifficulty(data.room);
+    const topic = await getTopic(data.room);
+
+    await saveScore(data.points, data.username, data.room, difficulty, topic);
 
     // FETCH ALL SCORES FOR THIS LOBBY
     const roomScores = await getScore(data.room);

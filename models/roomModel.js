@@ -5,6 +5,7 @@ const roomSchema = new mongoose.Schema({
   questions: [],
   isValid: Boolean,
   players: Number,
+  difficulty: String,
 });
 
 const Room = mongoose.model("Room", roomSchema);

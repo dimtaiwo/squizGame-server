@@ -1,11 +1,13 @@
 const Score = require("../models/scoreModel");
 
-async function saveScore(points, username, roomId) {
+async function saveScore(points, username, roomId, difficulty, topic) {
   try {
     const newScore = await new Score({
       points: points,
       username: username,
       room: roomId,
+      difficulty: difficulty,
+      topic: topic,
     });
     await newScore.save();
   } catch (error) {
