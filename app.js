@@ -3,7 +3,6 @@ const socketIo = require("socket.io");
 const app = express();
 const http = require("http");
 const server = http.createServer(app);
-const { fetchData } = require("./fetchdata");
 const {
   saveData,
   getQuestions,
