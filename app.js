@@ -16,6 +16,10 @@ const { instrument } = require("@socket.io/admin-ui");
 
 const db = require("./db");
 
+app.get("/", (req, res) => {
+  console.log("hello world !");
+});
+
 db();
 const io = socketIo(server, {
   cors: {
