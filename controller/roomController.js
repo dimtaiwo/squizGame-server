@@ -1,5 +1,5 @@
 const Room = require("../models/roomModel");
-const { fetchData } = require("../fetchData");
+const { fetchData } = require("../Fetchdata.js");
 
 async function saveData(roomId, topic, difficulty, question, players) {
   const results = await fetchData(topic, difficulty.toLowerCase(), question);
