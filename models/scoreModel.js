@@ -4,7 +4,7 @@ const scoreSchema = new mongoose.Schema({
   username: String,
   points: String,
   room: String,
-  difficulty: { type: String, required: true },
+  difficulty: { type: String },
   topic: String,
 });
 
