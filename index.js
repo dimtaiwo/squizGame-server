@@ -13,7 +13,7 @@ const {
   getRoom,
   getTopic,
 } = require("./controller/roomController");
-const { saveScore, getScore } = require("./controller/ScoreController");
+const { saveScore, getScore } = require("./controller/scoreController");
 
 const { instrument } = require("@socket.io/admin-ui");
 
