@@ -3,7 +3,7 @@ const socketIo = require("socket.io");
 const app = express();
 const http = require("http");
 const server = http.createServer(app);
-const scoreApiController = require("./controller/scoreApiController");
+const scoreApiController = require("./Controller/ScoreApiController");
 const {
   saveData,
   getQuestions,
@@ -11,8 +11,8 @@ const {
   getDifficulty,
   getRoom,
   getTopic,
-} = require("./controller/roomController");
-const { saveScore, getScore } = require("./controller/scoreController");
+} = require("./Controller/RoomController");
+const { saveScore, getScore } = require("./Controller/ScoreController");
 
 const { instrument } = require("@socket.io/admin-ui");
 
