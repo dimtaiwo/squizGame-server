@@ -1,4 +1,4 @@
-const Room = require("../models/roomModel");
+const Room = require("./models/roomModel");
 const { fetchData } = require("./fetchdata.js");
 
 async function saveData(roomId, topic, difficulty, question, players) {

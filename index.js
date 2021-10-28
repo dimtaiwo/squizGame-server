@@ -4,7 +4,7 @@ const cors = require("cors");
 const app = express();
 const http = require("http");
 const server = http.createServer(app);
-const scoreApiController = require("./controller/scoreApiController");
+const scoreApiController = require("./scoreApiController");
 const {
   saveData,
   getQuestions,
@@ -12,8 +12,8 @@ const {
   getDifficulty,
   getRoom,
   getTopic,
-} = require("./controller/roomController");
-const { saveScore, getScore } = require("./controller/scoreController");
+} = require("./roomController");
+const { saveScore, getScore } = require("./scoreController");
 
 const { instrument } = require("@socket.io/admin-ui");
 

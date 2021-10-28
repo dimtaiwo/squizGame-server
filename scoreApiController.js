@@ -1,4 +1,4 @@
-const Score = require("../models/scoreModel");
+const Score = require("./models/scoreModel");
 const express = require("express");
 
 const router = express.Router();

@@ -1,4 +1,4 @@
-const Score = require("../models/scoreModel");
+const Score = require("./models/scoreModel");
 
 async function saveScore(points, username, roomId, difficulty, topic) {
   try {
