@@ -12,8 +12,6 @@ const { saveScore, getScore } = require("./controller/scoreController");
 
 const { instrument } = require("@socket.io/admin-ui");
 
-// getQuestions("P_c18qtDjR2q1WdAAAAr");
-
 const db = require("./db");
 
 app.get("/", (req, res) => {
@@ -41,7 +39,6 @@ io.on("connection", (socket) => {
   console.log("a user connected to " + socket.id);
 
   socket.on("join", async (id) => {
-    //console.log("MAX PLAYERS ALLOWED: " + globalMaxPlayers[id]);
     const numberOfPlayers = await getPlayer(id);
 
     if (!globalRooms[id]) {
@@ -54,21 +51,16 @@ io.on("connection", (socket) => {
       return;
     }
 
-    // console.log("The room has: " + globalRooms[id] + "players");
-
     socket.join(id);
     console.log("User has JOINED room: " + id);
 
     const gameQuestions = await getQuestions(id);
-    // console.log(gameQuestions);
 
     socket.emit("joined", id, gameQuestions);
   });
 
   socket.on("create", async (details) => {
     console.log(details);
-    // const gameId = socket.id;
-    // console.log(gameId);
 
     await saveData(
       socket.id,
@@ -78,8 +70,6 @@ io.on("connection", (socket) => {
       details.players
     );
 
-    // globalMaxPlayers[socket.id] = details.players;
-    // console.log(details.players);
     await setMax(socket.id, details.players);
 
     socket.emit("created", socket.id);
@@ -89,20 +79,18 @@ io.on("connection", (socket) => {
     console.log("THE ID IS: " + id);
     // API CALL
     const gameQuestions = await getQuestions(id);
-    // console.log(gameQuestions);
+
     socket.emit("receiveData", gameQuestions);
     socket.to(id).emit("sendQuestions", gameQuestions);
   });
 
   socket.on("result", async (data) => {
     // SAVE THE RESULT TO DB
-    //console.log(`${data.username} has scored ${data.points} points`);
     await saveScore(data.points, data.username, data.room);
 
     // FETCH ALL SCORES FOR THIS LOBBY
     const roomScores = await getScore(data.room);
     // GIVE BACK ALL THE SCORES
-
     io.to(data.room).emit("updatedResults", roomScores);
   });
 

@@ -15,21 +15,21 @@ async function saveData(roomId, topic, difficulty, question, players) {
 }
 
 const getQuestions = async (id) => {
-  //   Room.find({ room: id }, (error, data) => {
-  //     if (error) {
-  //       console.log(error);
-  //     } else {
-  //       console.log(data);
-  //     }
-  //   });
-  console.log("Getting questions... for id: " + id);
-  const data = await Room.findOne({ room: id });
-  return data;
+  try {
+    const data = await Room.findOne({ room: id });
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 const getPlayer = async (id) => {
-  const data = await Room.findOne({ room: id });
-  return data.players;
+  try {
+    const data = await Room.findOne({ room: id });
+    return data.players;
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 module.exports = { saveData, getQuestions, getPlayer };

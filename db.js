@@ -6,7 +6,6 @@ const db = () => {
   mongoose
     .connect(url)
     .then(() => {
-      console.log(url);
       console.log("database Connected");
     })
     .catch((error) => {

@@ -1,18 +1,25 @@
 const Score = require("../models/scoreModel");
 
 async function saveScore(points, username, roomId) {
-  const newScore = await new Score({
-    points: points,
-    username: username,
-    room: roomId,
-  });
-
-  await newScore.save();
+  try {
+    const newScore = await new Score({
+      points: points,
+      username: username,
+      room: roomId,
+    });
+    await newScore.save();
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 async function getScore(room) {
-  const scores = await Score.find({ room: room });
-  return scores;
+  try {
+    const scores = await Score.find({ room: room });
+    return scores;
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 module.exports = { saveScore, getScore };
